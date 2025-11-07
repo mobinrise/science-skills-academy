@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Science Skills Academy</title>
+  <style>
+    body{font-family:Arial,system-ui,sans-serif;margin:24px;background:#0b1320;color:#eaf0ff}
+    h1{margin:0 0 12px}
+    .muted{color:#9fb1ff}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:16px}
+    .card{background:#151f35;border:1px solid #233154;border-radius:14px;padding:14px}
+    .badge{display:inline-block;font-size:12px;background:rgba(110,168,254,.15);border:1px solid #233154;border-radius:999px;padding:6px 10px;margin-bottom:6px}
+    a.btn{display:inline-block;background:#6ea8fe;color:#0a1020;text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:700;margin-top:6px}
+  </style>
+</head>
+<body>
+  <h1>Science Skills Academy</h1>
+  <p class="muted">Courses below are loaded live from your Google Sheet.</p>
+
+  <input id="q" placeholder="Search..." style="padding:10px;border-radius:10px;border:1px solid #233154;background:#151f35;color:#eaf0ff;width:100%;max-width:420px" />
+  <div id="grid" class="grid"></div>
+  <p id="empty" class="muted" style="display:none">No results.</p>
+
+<script>
+  // ---- CONFIG (your real Sheet ID is already set) ----
+  const SHEET_ID = "1blMVYrX1kurIIVW3f-1CSWPIK3TUcFXEmPY9d-zTVB4";
+  const RANGE = "Courses!A1:E"; // Title | Level | Duration | Description | Link
+
+  // ---- Fetch via GViz (no API key needed) ----
+  async function fetchRows(){
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=${encodeURIComponent(RANGE)}`;
+    const text = await fetch(url).then(r=>r.text());
+    const json = JSON.parse(text.substring(text.indexOf("(")+1, text.lastIndexOf(")")));
+    const rows = json.table.rows.map(r => (r.c||[]).map(c => c ? c.v : ""));
+    return rows;
+  }
+
+  function render(rows){
+    const grid = document.getElementById("grid");
+    const empty = document.getElementById("empty");
+    grid.innerHTML = "";
+    if(!rows || rows.length < 2){ empty.style.display="block"; return; }
+    empty.style.display="none";
+
+    const [headers, ...items] = rows;
+    const idx = Object.fromEntries(headers.map((h,i)=>[String(h).trim().toLowerCase(), i]));
+
+    const state = { all: items.map(r => ({
+      title: r[idx["title"]] || "Untitled",
+      level: r[idx["level"]] || "",
+      duration: r[idx["duration"]] || "",
+      description: r[idx["description"]] || "",
+      link: r[idx["link"]] || ""
+    })) };
+
+    // search
+    const q = document.getElementById("q");
+    q.addEventListener("input", draw);
+    draw();
+
+    function draw(){
+      const term = q.value.toLowerCase();
+      const list = state.all.filter(it =>
+        [it.title,it.level,it.duration,it.description].join(" ").toLowerCase().includes(term)
+      );
+      grid.innerHTML = "";
+      if(!list.length){ empty.style.display="block"; return; }
+      empty.style.display="none";
+      for(const it of list){
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="badge">${it.level || "General"} • ${it.duration || "Self-paced"}</div>
+          <h3 style="margin:4px 0 6px">${it.title}</h3>
+          <p class="muted" style="margin:0">${it.description}</p>
+          ${it.link ? `<a class="btn" href="${it.link}" target="_blank" rel="noreferrer">Open resource</a>` : "" }
+        `;
+        grid.appendChild(card);
+      }
+    }
+  }
+
+  (async function init(){
+    try {
+      const rows = await fetchRows();
+      render(rows);
+    } catch (e){
+      console.error(e);
+      document.body.insertAdjacentHTML("beforeend",
+        `<p class="muted">If nothing loads, make sure the Sheet is shared as <b>Anyone with the link → Viewer</b> and that your tab is named <b>Courses</b>.</p>`
+      );
+    }
+  })();
+</script>
+</body>
+</html>
