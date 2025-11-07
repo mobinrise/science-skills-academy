@@ -32,6 +32,50 @@
       .about { flex-direction: column !important; text-align: center; align-items: center !important; }
       .about img { margin-bottom: 20px; }
     }
+      /* Profile Image Styling */
+  .about-photo {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    border: 3px solid #6ea8fe;
+    background: #0b1320;
+    box-shadow: 0 0 20px rgba(110,168,254,0.4);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .about-photo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(110,168,254,0.8);
+  }
+
+  /* About Section layout improvement */
+  section.about-section {
+    margin-top: 60px;
+    padding: 40px;
+    background: #111a2f;
+    color: #cbd5ff;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    text-align: left;
+  }
+
+  /* Make text centered on small screens */
+  @media (max-width: 768px) {
+    section.about-section {
+      flex-direction: column;
+      text-align: center;
+    }
+    .about-photo {
+      margin-bottom: 15px;
+    }
+  }
+
   </style>
 </head>
 <link rel="icon" type="image/png" href="logo.png" />
@@ -77,7 +121,12 @@
 
   <!-- About -->
   <section class="about" style="margin-top:60px;padding:40px;background:#111a2f;color:#cbd5ff;border-radius:16px;display:flex;align-items:center;gap:30px;flex-wrap:wrap;">
-    <img src="mobin.jpg" alt="Mobin Rise" style="width:130px;height:130px;border-radius:50%;object-fit:cover;border:3px solid #6ea8fe;">
+    <img 
+  src="mobin.jpg" 
+  alt="Mobin Rise" 
+  class="about-photo">
+
+
     <div style="max-width:650px;">
       <h2 style="color:#fff;margin-bottom:10px;">About Science Skills Academy</h2>
       <p style="line-height:1.6;">
