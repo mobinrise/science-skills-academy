@@ -58,13 +58,26 @@
   </header>
 
   <!-- Main Content -->
-  <main style="padding:30px;">
-    <p class="muted">Courses below are loaded live from your Google Sheet.</p>
+ <main style="padding:30px;">
+  <section id="courses" style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+      <h2 style="margin:0">Courses</h2>
+      <span id="courseCount" class="badge">0</span>
+    </div>
 
-    <input id="q" placeholder="Search..." style="padding:10px;border-radius:10px;border:1px solid #233154;background:#151f35;color:#eaf0ff;width:100%;max-width:420px" />
+    <p class="muted" style="margin:8px 0 14px">
+      Courses below are loaded live from your Google Sheet.
+    </p>
+
+    <div class="toolbar" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <input id="q" placeholder="Search..." style="padding:10px;border-radius:10px;border:1px solid #233154;background:#151f35;color:#eaf0ff;width:100%;max-width:420px" />
+    </div>
+
     <div id="grid" class="grid"></div>
     <p id="empty" class="muted" style="display:none">No results.</p>
-  </main>
+  </section>
+</main>
+
 
 
 <script>
@@ -104,27 +117,33 @@
     q.addEventListener("input", draw);
     draw();
 
-    function draw(){
-      const term = q.value.toLowerCase();
-      const list = state.all.filter(it =>
-        [it.title,it.level,it.duration,it.description].join(" ").toLowerCase().includes(term)
-      );
-      grid.innerHTML = "";
-      if(!list.length){ empty.style.display="block"; return; }
-      empty.style.display="none";
-      for(const it of list){
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <div class="badge">${it.level || "General"} • ${it.duration || "Self-paced"}</div>
-          <h3 style="margin:4px 0 6px">${it.title}</h3>
-          <p class="muted" style="margin:0">${it.description}</p>
-          ${it.link ? `<a class="btn" href="${it.link}" target="_blank" rel="noreferrer">Open resource</a>` : "" }
-        `;
-        grid.appendChild(card);
-      }
-    }
+   function draw(){
+  const term = q.value.toLowerCase();
+  const list = state.all.filter(it =>
+    [it.title,it.level,it.duration,it.description].join(" ").toLowerCase().includes(term)
+  );
+
+  // update count badge
+  const countEl = document.getElementById("courseCount");
+  if (countEl) countEl.textContent = String(list.length);
+
+  grid.innerHTML = "";
+  if(!list.length){ empty.style.display="block"; return; }
+  empty.style.display="none";
+
+  for(const it of list){
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="badge">${it.level || "General"} • ${it.duration || "Self-paced"}</div>
+      <h3 style="margin:4px 0 6px">${it.title}</h3>
+      <p class="muted" style="margin:0">${it.description}</p>
+      ${it.link ? `<a class="btn" href="${it.link}" target="_blank" rel="noreferrer">Open resource</a>` : "" }
+    `;
+    grid.appendChild(card);
   }
+}
+
 
   (async function init(){
     try {
