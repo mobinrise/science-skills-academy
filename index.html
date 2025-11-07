@@ -4,180 +4,187 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Science Skills Academy</title>
-  <style>
-    body{font-family:Arial,system-ui,sans-serif;margin:24px;background:#0b1320;color:#eaf0ff}
-    h1{margin:0 0 12px}
-    .muted{color:#9fb1ff}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:16px}
-    .card{background:#151f35;border:1px solid #233154;border-radius:14px;padding:14px}
-    .badge{display:inline-block;font-size:12px;background:rgba(110,168,254,.15);border:1px solid #233154;border-radius:999px;padding:6px 10px;margin-bottom:6px}
-    a.btn{display:inline-block;background:#6ea8fe;color:#0a1020;text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:700;margin-top:6px}
-  </style>
- 
 
+  <style>
+    /* Base styles */
+    body { font-family: Arial, system-ui, sans-serif; margin: 24px; background: #0b1320; color: #eaf0ff; }
+    h1 { margin: 0 0 12px; }
+    .muted { color: #9fb1ff; }
+
+    /* Cards grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 16px; }
+    .card { background: #151f35; border: 1px solid #233154; border-radius: 14px; padding: 14px; }
+    .badge { display: inline-block; font-size: 12px; background: rgba(110,168,254,.15); border: 1px solid #233154; border-radius: 999px; padding: 6px 10px; margin-bottom: 6px; }
+    a.btn { display: inline-block; background: #6ea8fe; color: #0a1020; text-decoration: none; padding: 8px 12px; border-radius: 10px; font-weight: 700; margin-top: 6px; }
+
+    /* Header */
+    .site-header { background: linear-gradient(90deg,#0a1a40,#153074,#1e4fa0); color: #fff; padding: 20px 30px;
+                   display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #6ea8fe; }
+    .brand { display: flex; align-items: center; gap: 15px; }
+    .brand img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+    .site-header nav a { color: #fff; margin-right: 15px; text-decoration: none; }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      .site-header { flex-direction: column; align-items: flex-start !important; gap: 10px; }
+      .site-header nav { margin-top: 10px; }
+      main { padding: 20px !important; }
+      .about { flex-direction: column !important; text-align: center; align-items: center !important; }
+      .about img { margin-bottom: 20px; }
+    }
+  </style>
 </head>
+
 <body>
- <body>
-  <!-- Header Section -->
-  <header style="background:linear-gradient(90deg,#0a1a40,#153074,#1e4fa0);color:#fff;padding:20px 30px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #6ea8fe;">
-    <div style="display:flex;align-items:center;gap:15px;">
-      <img src="logo.png" alt="Science Skills Academy Logo" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
+  <!-- Header -->
+  <header class="site-header">
+    <div class="brand">
+      <img src="logo.png" alt="Science Skills Academy Logo">
       <div>
         <h1 style="margin:0;">Science Skills Academy</h1>
-        <p style="margin:2px 0 0;font-size:14px;color:#c7d9ff;">Learn Science the Smart Way</p>
+        <p class="muted" style="margin:2px 0 0;">Learn Science the Smart Way</p>
       </div>
     </div>
     <nav>
-      <a href="https://www.youtube.com/@scienceskillsacademy4380" target="_blank" rel="noreferrer" style="color:#fff;margin-right:15px;text-decoration:none;">YouTube</a>
-      <a href="https://www.facebook.com/mobin.rise/" target="_blank" rel="noreferrer" style="color:#fff;margin-right:15px;text-decoration:none;">Facebook</a>
-      <a href="https://github.com/mobinrise" target="_blank" rel="noreferrer" style="color:#fff;text-decoration:none;">GitHub</a>
+      <a href="https://www.youtube.com/@scienceskillsacademy4380" target="_blank" rel="noreferrer">YouTube</a>
+      <a href="https://www.facebook.com/mobin.rise/" target="_blank" rel="noreferrer">Facebook</a>
+      <a href="https://github.com/mobinrise" target="_blank" rel="noreferrer">GitHub</a>
     </nav>
-     <style>
-  @media (max-width: 768px) {
-    header {
-      flex-direction: column;
-      align-items: flex-start !important;
-      gap: 10px;
-    }
-    header nav {
-      margin-top: 10px;
-    }
-    main {
-      padding: 20px !important;
-    }
-    section {
-      flex-direction: column !important;
-      text-align: center;
-      align-items: center !important;
-    }
-    section img {
-      margin-bottom: 20px;
-    }
-  }
-</style>
   </header>
 
-  <!-- Main Content -->
- <main style="padding:30px;">
-  <section id="courses" style="max-width:1100px;margin:0 auto;">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-      <h2 style="margin:0">Courses</h2>
-      <span id="courseCount" class="badge">0</span>
+  <!-- Main -->
+  <main style="padding:30px;">
+    <section id="courses" style="max-width:1100px;margin:0 auto;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <h2 style="margin:0">Courses</h2>
+        <span id="courseCount" class="badge">0</span>
+      </div>
+
+      <p class="muted" style="margin:8px 0 14px">
+        Courses below are loaded live from your Google Sheet.
+      </p>
+
+      <div class="toolbar" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <input id="q" placeholder="Search..." style="padding:10px;border-radius:10px;border:1px solid #233154;background:#151f35;color:#eaf0ff;width:100%;max-width:420px" />
+      </div>
+
+      <div id="grid" class="grid"></div>
+      <p id="empty" class="muted" style="display:none">No results.</p>
+    </section>
+  </main>
+
+  <!-- About -->
+  <section class="about" style="margin-top:60px;padding:40px;background:#111a2f;color:#cbd5ff;border-radius:16px;display:flex;align-items:center;gap:30px;flex-wrap:wrap;">
+    <img src="mobin.jpg" alt="Mobin Rise" style="width:130px;height:130px;border-radius:50%;object-fit:cover;border:3px solid #6ea8fe;">
+    <div style="max-width:650px;">
+      <h2 style="color:#fff;margin-bottom:10px;">About Science Skills Academy</h2>
+      <p style="line-height:1.6;">
+        <strong>Science Skills Academy</strong> is an educational initiative by <strong>Mobin Rise</strong> dedicated to making science learning simple and inspiring.
+        The platform provides free lessons, notes, and experiments for students who want to learn science in a practical and engaging way.
+      </p>
+      <a href="mailto:mobinrise1@gmail.com"
+         style="display:inline-block;margin-top:12px;background:#6ea8fe;color:#0a1020;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:bold;">
+         📩 Contact Me
+      </a>
     </div>
-
-    <p class="muted" style="margin:8px 0 14px">
-      Courses below are loaded live from your Google Sheet.
-    </p>
-
-    <div class="toolbar" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-      <input id="q" placeholder="Search..." style="padding:10px;border-radius:10px;border:1px solid #233154;background:#151f35;color:#eaf0ff;width:100%;max-width:420px" />
-    </div>
-
-    <div id="grid" class="grid"></div>
-    <p id="empty" class="muted" style="display:none">No results.</p>
   </section>
-</main>
 
+  <!-- Footer -->
+  <footer style="margin-top:40px;padding:20px;text-align:center;background:#0a1a40;color:#cbd5ff;font-size:14px;border-top:1px solid #233154;">
+    © 2025 Science Skills Academy | Created by Mobin Rise
+  </footer>
 
+  <!-- App script -->
+  <script>
+    // ---- CONFIG (your real Sheet ID is already set) ----
+    const SHEET_ID = "1blMVYrX1kurIIVW3f-1CSWPIK3TUcFXEmPY9d-zTVB4";
+    const RANGE = "Courses!A1:E"; // Title | Level | Duration | Description | Link
 
-<script>
-  // ---- CONFIG (your real Sheet ID is already set) ----
-  const SHEET_ID = "1blMVYrX1kurIIVW3f-1CSWPIK3TUcFXEmPY9d-zTVB4";
-  const RANGE = "Courses!A1:E"; // Title | Level | Duration | Description | Link
-
-  // ---- Fetch via GViz (no API key needed) ----
-  async function fetchRows(){
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=${encodeURIComponent(RANGE)}`;
-    const text = await fetch(url).then(r=>r.text());
-    const json = JSON.parse(text.substring(text.indexOf("(")+1, text.lastIndexOf(")")));
-    const rows = json.table.rows.map(r => (r.c||[]).map(c => c ? c.v : ""));
-    return rows;
-  }
-
-  function render(rows){
-    const grid = document.getElementById("grid");
-    const empty = document.getElementById("empty");
-    grid.innerHTML = "";
-    if(!rows || rows.length < 2){ empty.style.display="block"; return; }
-    empty.style.display="none";
-
-    const [headers, ...items] = rows;
-    const idx = Object.fromEntries(headers.map((h,i)=>[String(h).trim().toLowerCase(), i]));
-
-    const state = { all: items.map(r => ({
-      title: r[idx["title"]] || "Untitled",
-      level: r[idx["level"]] || "",
-      duration: r[idx["duration"]] || "",
-      description: r[idx["description"]] || "",
-      link: r[idx["link"]] || ""
-    })) };
-
-    // search
-    const q = document.getElementById("q");
-    q.addEventListener("input", draw);
-    draw();
-
-   function draw(){
-  const term = q.value.toLowerCase();
-  const list = state.all.filter(it =>
-    [it.title,it.level,it.duration,it.description].join(" ").toLowerCase().includes(term)
-  );
-
-  // update count badge
-  const countEl = document.getElementById("courseCount");
-  if (countEl) countEl.textContent = String(list.length);
-
-  grid.innerHTML = "";
-  if(!list.length){ empty.style.display="block"; return; }
-  empty.style.display="none";
-
-  for(const it of list){
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <div class="badge">${it.level || "General"} • ${it.duration || "Self-paced"}</div>
-      <h3 style="margin:4px 0 6px">${it.title}</h3>
-      <p class="muted" style="margin:0">${it.description}</p>
-      ${it.link ? `<a class="btn" href="${it.link}" target="_blank" rel="noreferrer">Open resource</a>` : "" }
-    `;
-    grid.appendChild(card);
-  }
-}
-
-
-  (async function init(){
-    try {
-      const rows = await fetchRows();
-      render(rows);
-    } catch (e){
-      console.error(e);
-      document.body.insertAdjacentHTML("beforeend",
-        `<p class="muted">If nothing loads, make sure the Sheet is shared as <b>Anyone with the link → Viewer</b> and that your tab is named <b>Courses</b>.</p>`
-      );
+    // ---- Fetch via GViz (no API key needed) ----
+    async function fetchRows(){
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=${encodeURIComponent(RANGE)}`;
+      const text = await fetch(url).then(r=>r.text());
+      const json = JSON.parse(text.substring(text.indexOf("(")+1, text.lastIndexOf(")")));
+      const rows = json.table.rows.map(r => (r.c||[]).map(c => c ? c.v : ""));
+      return rows;
     }
-  })();
-</script>
-<!-- About Section --><!-- About Section -->
-<section style="margin-top:60px;padding:40px;background:#111a2f;color:#cbd5ff;border-radius:16px;display:flex;align-items:center;gap:30px;flex-wrap:wrap;">
-  <img src="mobin.jpg" alt="Mobin Rise" style="width:130px;height:130px;border-radius:50%;object-fit:cover;border:3px solid #6ea8fe;">
-  <div style="max-width:650px;">
-    <h2 style="color:#fff;margin-bottom:10px;">About Science Skills Academy</h2>
-    <p style="line-height:1.6;">
-      <strong>Science Skills Academy</strong> is an educational initiative by <strong>Mobin Rise</strong> dedicated to making science learning simple and inspiring.
-      The platform provides free lessons, notes, and experiments for students who want to learn science in a practical and engaging way.
-    </p>
-    <a href="mailto:mobinrise1@gmail.com" 
-       style="display:inline-block;margin-top:12px;background:#6ea8fe;color:#0a1020;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:bold;">
-       📩 Contact Me
-    </a>
-  </div>
-</section>
 
-<!-- Footer -->
-<footer style="margin-top:40px;padding:20px;text-align:center;background:#0a1a40;color:#cbd5ff;font-size:14px;border-top:1px solid #233154;">
-  © 2025 Science Skills Academy | Created by Mobin Rise
-</footer>
+    // ---- Render + search + count ----
+    function render(rows){
+      const grid  = document.getElementById("grid");
+      const empty = document.getElementById("empty");
+      grid.innerHTML = "";
 
+      if (!rows || rows.length < 2) {
+        empty.style.display = "block";
+        return;
+      }
+      empty.style.display = "none";
+
+      const [headers, ...items] = rows;
+      const idx = Object.fromEntries(headers.map((h,i)=>[String(h).trim().toLowerCase(), i]));
+
+      const state = {
+        all: items.map(r => ({
+          title:       r[idx["title"]]       || "Untitled",
+          level:       r[idx["level"]]       || "",
+          duration:    r[idx["duration"]]    || "",
+          description: r[idx["description"]] || "",
+          link:        r[idx["link"]]        || ""
+        }))
+      };
+
+      const q = document.getElementById("q");
+      q.oninput = draw; // ensures only one handler
+
+      draw();
+
+      function draw(){
+        const term = q.value.toLowerCase();
+        const list = state.all.filter(it =>
+          [it.title, it.level, it.duration, it.description]
+            .join(" ")
+            .toLowerCase()
+            .includes(term)
+        );
+
+        // update the Courses count badge
+        const countEl = document.getElementById("courseCount");
+        if (countEl) countEl.textContent = String(list.length);
+
+        grid.innerHTML = "";
+        if (!list.length){
+          empty.style.display = "block";
+          return;
+        }
+        empty.style.display = "none";
+
+        for (const it of list){
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <div class="badge">${it.level || "General"} • ${it.duration || "Self-paced"}</div>
+            <h3 style="margin:4px 0 6px">${it.title}</h3>
+            <p class="muted" style="margin:0">${it.description}</p>
+            ${it.link ? `<a class="btn" href="${it.link}" target="_blank" rel="noreferrer">Open resource</a>` : ""}
+          `;
+          grid.appendChild(card);
+        }
+      }
+    }
+
+    // ---- Init ----
+    (async function init(){
+      try {
+        const rows = await fetchRows();
+        render(rows);
+      } catch (e){
+        console.error(e);
+        document.body.insertAdjacentHTML("beforeend",
+          `<p class="muted">If nothing loads, make sure the Sheet is shared as <b>Anyone with the link → Viewer</b> and your tab is named <b>Courses</b>.</p>`
+        );
+      }
+    })();
+  </script>
 </body>
-
 </html>
