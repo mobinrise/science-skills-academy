@@ -34,6 +34,8 @@
     }
   </style>
 </head>
+<link rel="icon" type="image/png" href="logo.png" />
+
 
 <body>
   <!-- Header -->
@@ -95,96 +97,105 @@
   </footer>
 
   <!-- App script -->
-  <script>
-    // ---- CONFIG (your real Sheet ID is already set) ----
-    const SHEET_ID = "1blMVYrX1kurIIVW3f-1CSWPIK3TUcFXEmPY9d-zTVB4";
-    const RANGE = "Courses!A1:E"; // Title | Level | Duration | Description | Link
+ <script>
+// ========= CONFIG =========
+const SHEET_ID = "1blMVYrX1kurIIVW3f-1CSWPIK3TUcFXEmPY9d-zTVB4";
+const RANGE    = "Courses!A1:E"; // Title | Level | Duration | Description | Link
 
-    // ---- Fetch via GViz (no API key needed) ----
-    async function fetchRows(){
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=${encodeURIComponent(RANGE)}`;
-      const text = await fetch(url).then(r=>r.text());
-      const json = JSON.parse(text.substring(text.indexOf("(")+1, text.lastIndexOf(")")));
-      const rows = json.table.rows.map(r => (r.c||[]).map(c => c ? c.v : ""));
-      return rows;
+// ========= FETCH (GViz) =========
+async function fetchRows(){
+  const url  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=${encodeURIComponent(RANGE)}`;
+  const text = await fetch(url).then(r=>r.text());
+  const json = JSON.parse(text.substring(text.indexOf("(")+1, text.lastIndexOf(")")));
+  return json.table.rows.map(r => (r.c||[]).map(c => c ? c.v : ""));
+}
+
+// ========= RENDER (group by Level) =========
+function render(rows){
+  const grid  = document.getElementById("grid");
+  const empty = document.getElementById("empty");
+  grid.innerHTML = "";
+
+  if (!rows || rows.length < 2) { empty.style.display="block"; return; }
+  empty.style.display = "none";
+
+  const [headers, ...items] = rows;
+  const idx = Object.fromEntries(headers.map((h,i)=>[String(h).trim().toLowerCase(), i]));
+
+  const state = {
+    all: items.map(r => ({
+      title:       r[idx["title"]]       || "Untitled",
+      level:       r[idx["level"]]       || "General",
+      duration:    r[idx["duration"]]    || "",
+      description: r[idx["description"]] || "",
+      link:        r[idx["link"]]        || ""
+    }))
+  };
+
+  const q = document.getElementById("q");
+  q.oninput = draw;
+
+  draw();
+
+  function draw(){
+    const term = q.value.toLowerCase();
+    const list = state.all.filter(it =>
+      [it.title, it.level, it.duration, it.description].join(" ").toLowerCase().includes(term)
+    );
+
+    // update Courses count
+    const countEl = document.getElementById("courseCount");
+    if (countEl) countEl.textContent = String(list.length);
+
+    grid.innerHTML = "";
+    if (!list.length){ empty.style.display="block"; return; }
+    empty.style.display="none";
+
+    // group by Level
+    const groups = {};
+    for (const it of list){
+      const lvl = it.level || "General";
+      (groups[lvl] ||= []).push(it);
     }
 
-    // ---- Render + search + count ----
-    function render(rows){
-      const grid  = document.getElementById("grid");
-      const empty = document.getElementById("empty");
-      grid.innerHTML = "";
+    // render each group
+    for (const [lvl, items] of Object.entries(groups)){
+      const section = document.createElement("div");
+      section.innerHTML = `<h3 style="margin-top:25px;margin-bottom:10px;color:#6ea8fe">${lvl}</h3>`;
 
-      if (!rows || rows.length < 2) {
-        empty.style.display = "block";
-        return;
+      const cardsWrap = document.createElement("div");
+      cardsWrap.className = "grid";
+
+      for (const it of items){
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="badge">${it.level || "General"} • ${it.duration || "Self-paced"}</div>
+          <h3 style="margin:4px 0 6px">${it.title}</h3>
+          <p class="muted" style="margin:0">${it.description}</p>
+          ${it.link ? `<a class="btn" href="${it.link}" target="_blank" rel="noreferrer">Open resource</a>` : ""}
+        `;
+        cardsWrap.appendChild(card);
       }
-      empty.style.display = "none";
 
-      const [headers, ...items] = rows;
-      const idx = Object.fromEntries(headers.map((h,i)=>[String(h).trim().toLowerCase(), i]));
-
-      const state = {
-        all: items.map(r => ({
-          title:       r[idx["title"]]       || "Untitled",
-          level:       r[idx["level"]]       || "",
-          duration:    r[idx["duration"]]    || "",
-          description: r[idx["description"]] || "",
-          link:        r[idx["link"]]        || ""
-        }))
-      };
-
-      const q = document.getElementById("q");
-      q.oninput = draw; // ensures only one handler
-
-      draw();
-
-      function draw(){
-        const term = q.value.toLowerCase();
-        const list = state.all.filter(it =>
-          [it.title, it.level, it.duration, it.description]
-            .join(" ")
-            .toLowerCase()
-            .includes(term)
-        );
-
-        // update the Courses count badge
-        const countEl = document.getElementById("courseCount");
-        if (countEl) countEl.textContent = String(list.length);
-
-        grid.innerHTML = "";
-        if (!list.length){
-          empty.style.display = "block";
-          return;
-        }
-        empty.style.display = "none";
-
-        for (const it of list){
-          const card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = `
-            <div class="badge">${it.level || "General"} • ${it.duration || "Self-paced"}</div>
-            <h3 style="margin:4px 0 6px">${it.title}</h3>
-            <p class="muted" style="margin:0">${it.description}</p>
-            ${it.link ? `<a class="btn" href="${it.link}" target="_blank" rel="noreferrer">Open resource</a>` : ""}
-          `;
-          grid.appendChild(card);
-        }
-      }
+      section.appendChild(cardsWrap);
+      grid.appendChild(section);
     }
+  }
+}
 
-    // ---- Init ----
-    (async function init(){
-      try {
-        const rows = await fetchRows();
-        render(rows);
-      } catch (e){
-        console.error(e);
-        document.body.insertAdjacentHTML("beforeend",
-          `<p class="muted">If nothing loads, make sure the Sheet is shared as <b>Anyone with the link → Viewer</b> and your tab is named <b>Courses</b>.</p>`
-        );
-      }
-    })();
-  </script>
+// ========= INIT =========
+(async function init(){
+  try {
+    const rows = await fetchRows();
+    render(rows);
+  } catch (e){
+    console.error(e);
+    document.body.insertAdjacentHTML("beforeend",
+      `<p class="muted">If nothing loads, make sure the Sheet is shared as <b>Anyone with the link → Viewer</b> and your tab is named <b>Courses</b>.</p>`
+    );
+  }
+})();
+</script>
 </body>
 </html>
